@@ -33,29 +33,29 @@ This document outlines the units of work required to build the frontend for the 
 
 ## Phase 1: Authentication
 
-- [ ] **Types:** Define TypeScript types/interfaces for Auth requests/responses (LoginRequest, LoginResponse, RegisterRequest, UserInfo).
-- [ ] **API Service:** Create `src/services/authApi.ts` with functions for `login`, `register`, `logout` (if backend endpoint exists), `getCurrentUser` (optional).
-- [ ] **Zustand Store:** Create `useAuthStore` slice to manage authentication status (isAuthenticated), user information, and JWT token. Implement actions to set/clear auth state.
-- [ ] **Token Storage:** Implement logic to securely store/retrieve JWT token (e.g., `localStorage` or secure alternative) upon login/logout via Zustand middleware (`persist`) or effects.
-- [ ] **Login Page:**
-  - [ ] Create route and component (`pages/LoginPage.tsx`).
-  - [ ] Build login form UI using TailwindCSS.
-  - [ ] Implement form state management (e.g., `react-hook-form` or simple `useState`).
-  - [ ] Add input validation (client-side).
-  - [ ] Implement `useMutation` (Tanstack Query) to call the login API service.
-  - [ ] Handle loading and error states from the mutation.
-  - [ ] On successful login: update Zustand store, store token, redirect to dashboard/home.
-- [ ] **Registration Page:**
-  - [ ] Create route and component (`pages/RegisterPage.tsx`).
-  - [ ] Build registration form UI.
-  - [ ] Implement form state and validation.
-  - [ ] Implement `useMutation` to call the register API service.
-  - [ ] Handle loading/error states.
-  - [ ] On successful registration: potentially auto-login or redirect to login page.
-- [ ] **Protected Routes:** Configure Tanstack Router to prevent access to protected pages if the user is not authenticated (check `useAuthStore`). Redirect to Login page.
-- [ ] **Logout Functionality:** Implement logout button (e.g., in Header), clear token, clear Zustand auth state, redirect to login page. Use `queryClient.clear()` to reset Tanstack Query cache on logout.
-- [ ] **Auth Interceptor:** Ensure Axios request interceptor correctly reads the token from storage/Zustand and adds the `Authorization: Bearer <token>` header.
-- [ ] **401 Handling:** Implement logic in Axios response interceptor or Tanstack Query global callbacks to handle 401 errors (e.g., force logout).
+- [x] **Types:** Define TypeScript types/interfaces for Auth requests/responses (LoginRequest, LoginResponse, RegisterRequest, UserInfo).
+- [x] **API Service:** Create `src/services/authApi.ts` with functions for `login`, `register`, `logout` (if backend endpoint exists), `getCurrentUser` (optional).
+- [x] **Zustand Store:** Create `useAuthStore` slice to manage authentication status (isAuthenticated), user information, and JWT token. Implement actions to set/clear auth state.
+- [x] **Token Storage:** Implement logic to securely store/retrieve JWT token (e.g., `localStorage` or secure alternative) upon login/logout via Zustand middleware (`persist`) or effects.
+- [x] **Login Page:**
+  - [x] Create route and component (`pages/LoginPage.tsx`).
+  - [x] Build login form UI using TailwindCSS.
+  - [x] Implement form state management (e.g., `react-hook-form` or simple `useState`).
+  - [x] Add input validation (client-side).
+  - [x] Implement `useMutation` (Tanstack Query) to call the login API service.
+  - [x] Handle loading and error states from the mutation.
+  - [x] On successful login: update Zustand store, store token, redirect to dashboard/home.
+- [x] **Registration Page:**
+  - [x] Create route and component (`pages/RegisterPage.tsx`).
+  - [x] Build registration form UI.
+  - [x] Implement form state and validation.
+  - [x] Implement `useMutation` to call the register API service.
+  - [x] Handle loading/error states.
+  - [x] On successful registration: potentially auto-login or redirect to login page.
+- [x] **Protected Routes:** Configure Tanstack Router to prevent access to protected pages if the user is not authenticated (check `useAuthStore`). Redirect to Login page.
+- [x] **Logout Functionality:** Implement logout button (e.g., in Header), clear token, clear Zustand auth state, redirect to login page. Use `queryClient.clear()` to reset Tanstack Query cache on logout.
+- [x] **Auth Interceptor:** Ensure Axios request interceptor correctly reads the token from storage/Zustand and adds the `Authorization: Bearer <token>` header.
+- [x] **401 Handling:** Implement logic in Axios response interceptor or Tanstack Query global callbacks to handle 401 errors (e.g., force logout).
 
 ---
 
