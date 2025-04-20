@@ -1,0 +1,144 @@
+# --- Frontend Development Rules (.windsurfrules) ---
+
+# Project: Item Tracker Application
+
+# Focus: React Frontend using Vite, TypeScript, TailwindCSS, Tanstack, Zustand
+
+# --- Primary Instructions ---
+
+- If a plan.md file exists, use it as a reference for the current state of the project.
+- Always start from the top of the plan.md finishing each task before working on another task.
+- Update the plan.md file after completing each task.
+- Avoid working on multiple tasks simultaneously.
+- Avoid working on tasks that are not listed in the plan.md file.
+
+# --- Core Technology Stack & Versions ---
+
+Framework: React (version 19+)
+BuildTool: Vite
+Language: TypeScript (latest stable)
+Styling: TailwindCSS (latest stable)
+Routing: Tanstack Router (React Router v6 alternative, assuming usage)
+DataFetchingServerState: Tanstack Query (aka React Query) (latest stable, v4+)
+ClientStateManagement: Zustand (latest stable)
+
+# --- TypeScript Usage ---
+
+- Rule: Use TypeScript for ALL frontend code files (.ts, .tsx).
+- Rule: Enable and adhere to strict mode (`"strict": true` in `tsconfig.json`).
+- Rule: Define explicit interfaces or types for all component props, state variables, API request/response payloads, and Zustand store slices.
+- Rule: Place shared types/interfaces in `src/types/` or within relevant feature/service directories.
+- Rule: Strive to keep frontend types aligned with backend C# DTOs, potentially generating or sharing them if feasible. Use `unknown` or `any` sparingly and only with clear justification.
+
+# --- React Best Practices ---
+
+- Rule: Use Functional Components exclusively. Class components are forbidden.
+- Rule: Utilize React Hooks (`useState`, `useEffect`, `useContext`, `useRef`, `useMemo`, `useCallback`) for state and side effects.
+- Rule: Follow the Rules of Hooks strictly.
+- Rule: Prefer component composition and custom hooks over higher-order components (HOCs) or render props where applicable.
+- Rule: Keep components small, focused, and testable (Single Responsibility Principle).
+
+# --- Project Structure ---
+
+- Rule: Follow a consistent folder structure. Recommended structure:
+  - `src/`
+    - `assets/` (images, fonts, etc.)
+    - `components/` (Shared, reusable UI components)
+    - `config/` (App configuration, environment variables TBD)
+    - `contexts/` (React Context providers, if needed alongside Zustand)
+    - `features/` (Modules grouping components, hooks, services related to a specific feature - e.g., `features/spaces`, `features/auth`)
+    - `hooks/` (Shared custom hooks)
+    - `lib/` (Utility functions, helpers)
+    - `pages/` or `routes/` (Top-level components mapped to routes by Tanstack Router)
+    - `providers/` (Wrapper components for Context, QueryClient, etc.)
+    - `services/` or `api/` (API call functions, organized by resource)
+    - `store/` (Zustand store definitions)
+    - `styles/` (Global styles, Tailwind base/components overrides - e.g., `index.css`)
+    - `types/` (Shared TypeScript types/interfaces)
+    - `main.tsx` (Application entry point, Root rendering)
+- Rule: Use `index.ts` files within component/feature folders for cleaner exports and imports.
+
+# --- Styling (TailwindCSS) ---
+
+- Rule: Primarily use TailwindCSS utility classes directly within JSX for styling.
+- Rule: Configure `tailwind.config.js` to define theme customizations (colors, fonts, spacing, plugins) rather than writing extensive custom CSS.
+- Rule: Use `@apply` directive sparingly, mainly in global CSS (`src/styles/index.css`) for base element styles or abstracting very common component patterns if necessary.
+- Rule: Use descriptive variable names if extracting complex class strings using libraries like `clsx` or `classnames`.
+- Rule: Ensure TailwindCSS IntelliSense plugin is used in the IDE for better development experience.
+
+# --- Data Fetching & Server State (Tanstack Query) ---
+
+- Rule: Use `useQuery` hook for fetching data that needs caching, background updates, etc.
+- Rule: Use `useMutation` hook for data modification operations (POST, PUT, DELETE).
+- Rule: Define clear and consistent query keys. Recommended pattern: `[scope, entity, { detail?, params? }]` (e.g., `['spaces', 'list']`, `['spaces', 'detail', spaceId]`, `['items', 'list', { spaceId: spaceId, containerId: cId }]`).
+- Rule: Call `queryClient.invalidateQueries` or `queryClient.setQueryData` within mutation `onSuccess` or `onSettled` callbacks to update relevant queries after data changes.
+- Rule: Utilize Tanstack Query DevTools (`ReactQueryDevtools`) during development.
+- Rule: Handle `isLoading`, `isFetching`, `isError`, `error`, and `data` states provided by the hooks appropriately in the UI.
+
+# --- Routing (Tanstack Router) ---
+
+- Rule: Configure routes using Tanstack Router's API (e.g., `createReactRouter`, `createRoute`).
+- Rule: If using file-based routing, adhere to the naming conventions (`__root.tsx`, `index.tsx`, `$param.tsx`, `_layout.tsx`).
+- Rule: Use Tanstack Router hooks for navigation (`useNavigate`), accessing parameters (`useParams`), search parameters (`useSearch`), and route matching (`useMatch`).
+- Rule: Leverage `loader` functions associated with routes for route-level data fetching where appropriate, integrating with Tanstack Query.
+- Rule: Handle pending/loading states provided by Tanstack Router during navigation and data loading.
+
+# --- Client State Management (Zustand) ---
+
+- Rule: Use Zustand for global or cross-feature _client-side_ state that doesn't fit well into server state caching (e.g., UI state like modals/sidebars, theme preferences, temporary form state if complex).
+- Rule: Create stores using the `create` function in `src/store/`. Define state shape and actions clearly within the creator function.
+- Rule: Use the generated hook (`useMyStore`) to access state and actions within components.
+- Rule: Prefer atomic stores/slices for better organization if state becomes complex (`create(devtools(persist(...)))` can wrap slices).
+- Rule: Use Zustand middleware (like `devtools`, `persist`) as needed.
+- Rule: Avoid duplicating server state managed by Tanstack Query within Zustand stores unless absolutely necessary for specific offline or complex UI logic.
+
+# --- API Interaction ---
+
+- Rule: Centralize API call logic in the `src/services/` directory, organized by resource (e.g., `spaceApi.ts`, `itemApi.ts`).
+- Rule: Use `axios` (preferred for features like interceptors) or the native `fetch` API for making HTTP requests.
+- Rule: Use `async/await` syntax for handling asynchronous operations.
+- Rule: Implement request/response interceptors (if using axios) for common tasks like adding the JWT token to Authorization headers and handling global errors (e.g., 401 Unauthorized).
+- Rule: Ensure API service functions return typed responses based on shared interfaces/types.
+
+# --- Naming Conventions ---
+
+- Rule: Component filenames and function names: `PascalCase` (`UserProfile.tsx`, `function UserProfile()`).
+- Rule: Hook filenames and function names: `camelCase` prefixed with `use` (`useAuthStatus.ts`, `function useAuthStatus()`).
+- Rule: Zustand store filenames and hooks: `camelCase` store name, often suffixed with `Store` or `Slice` (`useAuthStore.ts`, `const useAuthStore = create(...)`).
+- Rule: Service files: `camelCase` suffixed with `Api` or `Service` (`itemApi.ts`).
+- Rule: Type/Interface filenames: `PascalCase` (`Item.ts`) or grouped in `types.ts`.
+- Rule: Folder names: `kebab-case` (e.g., `user-profile`) or `camelCase` (e.g, `userProfile`). Maintain consistency.
+- Rule: Variables and functions: `camelCase`.
+- Rule: CSS classes (if any custom): `kebab-case`.
+
+# --- Code Style, Linting, Formatting ---
+
+- Rule: Configure and use Prettier for automatic code formatting. Store config in `.prettierrc.js` or similar.
+- Rule: Configure and use ESLint with appropriate plugins (`@typescript-eslint/eslint-plugin`, `eslint-plugin-react`, `eslint-plugin-react-hooks`, `eslint-plugin-jsx-a11y`, `eslint-plugin-tailwindcss`). Store config in `.eslintrc.js` or similar.
+- Rule: Resolve all ESLint and Prettier errors/warnings before committing code.
+- Rule: Write clear, readable, and maintainable code with appropriate comments where logic is complex.
+
+# --- Testing ---
+
+- Rule: Write unit tests for utility functions, custom hooks, and complex component logic.
+- Rule: Write integration tests for user flows and component interactions.
+- Rule: Use Jest as the test runner and React Testing Library (`@testing-library/react`) for component testing.
+- Rule: Use MSW (Mock Service Worker) or similar for mocking API requests during testing.
+- Rule: Aim for reasonable test coverage, focusing on critical paths and complex logic.
+
+# --- Vite Configuration ---
+
+- Rule: Use `vite.config.ts` for configuring build options, plugins (React, potentially others), server proxy (for API calls during dev), environment variables (`envPrefix`), and aliases (`resolve.alias`).
+
+# --- Environment Variables ---
+
+- Rule: Use Vite's built-in environment variable handling (prefix with `VITE_`).
+- Rule: Define environment variables in `.env`, `.env.development`, `.env.production` files.
+- Rule: Do NOT commit sensitive keys or secrets to the repository; use environment variables provided during build/deployment.
+
+# --- General Principles ---
+
+- Rule: Prefer immutability when working with state (use spread operators, array methods like `map`, `filter`, `reduce`).
+- Rule: Avoid prop drilling; use Zustand, Context API, or component composition.
+- Rule: Optimize performance where necessary, using `React.memo`, `useMemo`, `useCallback` judiciously.
+- Rule: Ensure accessibility (a11y) best practices are followed (semantic HTML, ARIA attributes where needed, keyboard navigation).
